@@ -1,10 +1,10 @@
 const express = require("express");
 const app = express();
-const port = 5000;
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const config = require("./config/key");
 const { User } = require("./models/User");
+const { auth } = require("./middleware/auth");
 
 //application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -69,6 +69,37 @@ app.post("/api/users/login", async (req, res) => {
     return res.status(500).json({ loginSuccess: false, error: err.message });
   }
 });
+
+// role 1 어드민    role 2 특정 부서 어드민
+// role 0 -> 일반유저   role 0이 아니면  관리자
+app.get("/api/users/auth", auth, (req, res) => {
+  //여기 까지 미들웨어를 통과해 왔다는 얘기는  Authentication 이 True 라는 말.
+  res.status(200).json({
+    _id: req.user._id,
+    isAdmin: req.user.role === 0 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+    lastname: req.user.lastname,
+    role: req.user.role,
+    image: req.user.image,
+  });
+});
+
+app.get("/api/users/logout", auth, async (req, res) => {
+  try {
+    console.log("req.user", req.user);
+
+    await User.findOneAndUpdate({ _id: req.user._id }, { token: "" });
+
+    return res.status(200).send({ success: true });
+  } catch (err) {
+    console.error("Logout error:", err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+const port = 5000;
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
