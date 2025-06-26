@@ -1,0 +1,23 @@
+const express = require("express");
+const app = express();
+const port = 5000;
+
+const mongoose = require("mongoose");
+mongoose
+  .connect(
+    "mongodb+srv://ockjungbong:tongtong2*@bolierplate.attq1i6.mongodb.net/?retryWrites=true&w=majority&appName=bolierplate",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then(() => console.log("DB connected..."))
+  .catch((err) => console.log(err));
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
