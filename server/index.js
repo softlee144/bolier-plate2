@@ -5,6 +5,14 @@ const cookieParser = require("cookie-parser");
 const config = require("./config/key");
 const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // React 앱 주소만 허용
+    credentials: true, // 쿠키 포함 시 필요
+  })
+);
 
 //application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,6 +35,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/hello", (req, res) => {
+  console.log("✅ /api/hello hit from client");
   res.send("hello react");
 });
 
