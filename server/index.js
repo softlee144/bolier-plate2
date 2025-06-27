@@ -26,6 +26,10 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+app.get("/api/hello", (req, res) => {
+  res.send("hello react");
+});
+
 app.post("/api/users/register", async (req, res) => {
   try {
     const user = new User(req.body);
