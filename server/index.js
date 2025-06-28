@@ -41,8 +41,11 @@ app.get("/api/hello", (req, res) => {
 
 app.post("/api/users/register", async (req, res) => {
   try {
+    console.log("register API ==============1");
     const user = new User(req.body);
-    await user.save(); // 콜백 제거 → await 사용
+    console.log("register API ==============2");
+    await user.save();
+    console.log("register API ==============3");
 
     return res.status(200).json({ success: true });
   } catch (err) {
